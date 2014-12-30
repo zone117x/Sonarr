@@ -4,6 +4,7 @@ using System.Linq;
 using NLog;
 using NLog.Targets;
 using NUnit.Framework;
+using NzbDrone.Common.Extensions;
 
 namespace NzbDrone.Test.Common
 {
@@ -91,6 +92,17 @@ namespace NzbDrone.Test.Common
             {
                 inconclusiveLogs.ForEach(c => _logs.Remove(c));
                 Assert.Inconclusive(GetLogsString(inconclusiveLogs));
+            }
+        }
+
+        public static void Expected(string text, LogLevel level)
+        {
+            var logs = _logs.Where(l => l.Level == level &&
+                                        l.FormattedMessage.ToLower().Contains(text.ToLower())).ToList();
+
+            if (logs.Empty())
+            {
+                Assert.Fail("Expected: [{0}] {1}", level, text);        
             }
         }
 
