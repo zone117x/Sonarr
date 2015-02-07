@@ -1,10 +1,7 @@
 var Marionette = require('marionette');
 var SeriesCollection = require('../Series/SeriesCollection');
-var SeasonCollection = require('../Series/SeasonCollection');
 var SeriesCollectionView = require('./SeriesCollectionView');
-var LoadingView = require('../Shared/LoadingView');
 var ToolbarLayout = require('../Shared/Toolbar/ToolbarLayout');
-require('../Mixins/backbone.signalr.mixin');
 
 module.exports = Marionette.Layout.extend({
     template     : 'SeasonPass/SeasonPassLayoutTemplate',

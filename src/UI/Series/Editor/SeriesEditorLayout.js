@@ -10,7 +10,7 @@ var SeasonFolderCell = require('../../Cells/SeasonFolderCell');
 var SelectAllCell = require('../../Cells/SelectAllCell');
 var ToolbarLayout = require('../../Shared/Toolbar/ToolbarLayout');
 var FooterView = require('./SeriesEditorFooterView');
-require('../../Mixins/backbone.signalr.mixin');
+
 
 module.exports = Marionette.Layout.extend({
     template        : 'Series/Editor/SeriesEditorLayoutTemplate',

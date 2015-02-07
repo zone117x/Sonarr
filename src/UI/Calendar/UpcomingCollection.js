@@ -1,8 +1,9 @@
-var Backbone = require('backbone');
+﻿var Backbone = require('backbone');
 var moment = require('moment');
 var EpisodeModel = require('../Series/EpisodeModel');
+var AsSignalRCollection = require('../Mixins/AsSignalrCollection');
 
-module.exports = Backbone.Collection.extend({
+var collection = Backbone.Collection.extend({
     url        : window.NzbDrone.ApiRoot + '/calendar',
     model      : EpisodeModel,
     comparator : function(model1, model2){
@@ -21,3 +22,7 @@ module.exports = Backbone.Collection.extend({
         return 0;
     }
 });
+
+AsSignalRCollection.call(collection);
+
+module.exports = collection;

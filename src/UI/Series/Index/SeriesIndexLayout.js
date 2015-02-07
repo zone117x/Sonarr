@@ -15,7 +15,7 @@ var SeriesStatusCell = require('../../Cells/SeriesStatusCell');
 var FooterView = require('./FooterView');
 var FooterModel = require('./FooterModel');
 var ToolbarLayout = require('../../Shared/Toolbar/ToolbarLayout');
-require('../../Mixins/backbone.signalr.mixin');
+
 
 module.exports = Marionette.Layout.extend({
     template         : 'Series/Index/SeriesIndexLayoutTemplate',

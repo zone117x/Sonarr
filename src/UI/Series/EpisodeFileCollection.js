@@ -1,7 +1,9 @@
-var Backbone = require('backbone');
+﻿var Backbone = require('backbone');
 var EpisodeFileModel = require('./EpisodeFileModel');
+var AsSignalRCollection = require('../Mixins/AsSignalrCollection');
 
-module.exports = Backbone.Collection.extend({
+
+var Collection = Backbone.Collection.extend({
     url           : window.NzbDrone.ApiRoot + '/episodefile',
     model         : EpisodeFileModel,
     originalFetch : Backbone.Collection.prototype.fetch,
@@ -20,3 +22,7 @@ module.exports = Backbone.Collection.extend({
         return this.originalFetch.call(this, options);
     }
 });
+
+AsSignalRCollection.call(Collection);
+
+module.exports = Collection;

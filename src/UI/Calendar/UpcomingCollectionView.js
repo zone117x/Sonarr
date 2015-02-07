@@ -1,8 +1,7 @@
-var _ = require('underscore');
+﻿var _ = require('underscore');
 var Marionette = require('marionette');
 var UpcomingCollection = require('./UpcomingCollection');
 var UpcomingItemView = require('./UpcomingItemView');
-require('../Mixins/backbone.signalr.mixin');
 
 module.exports = Marionette.CollectionView.extend({
     itemView         : UpcomingItemView,

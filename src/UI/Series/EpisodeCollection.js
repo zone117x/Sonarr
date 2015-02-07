@@ -1,8 +1,8 @@
-var Backbone = require('backbone');
+﻿var Backbone = require('backbone');
 var EpisodeModel = require('./EpisodeModel');
-require('./EpisodeCollection');
+var AsSignalRCollection = require('../Mixins/AsSignalrCollection');
 
-module.exports = Backbone.Collection.extend({
+var Collection = Backbone.Collection.extend({
     url           : window.NzbDrone.ApiRoot + '/episode',
     model         : EpisodeModel,
     state         : {
@@ -42,3 +42,7 @@ module.exports = Backbone.Collection.extend({
         return this.originalFetch.call(this, options);
     }
 });
+
+AsSignalRCollection.call(Collection);
+
+module.exports = Collection;

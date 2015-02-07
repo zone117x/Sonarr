@@ -13,7 +13,7 @@ var LoadingView = require('../../Shared/LoadingView');
 var Messenger = require('../../Shared/Messenger');
 var CommandController = require('../../Commands/CommandController');
 require('backgrid.selectall');
-require('../../Mixins/backbone.signalr.mixin');
+
 
 module.exports = Marionette.Layout.extend({
     template        : 'Wanted/Missing/MissingLayoutTemplate',

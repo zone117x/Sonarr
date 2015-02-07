@@ -1,4 +1,4 @@
-var $ = require('jquery');
+﻿var $ = require('jquery');
 var vent = require('../vent');
 var Marionette = require('marionette');
 var moment = require('moment');
@@ -6,7 +6,6 @@ var CalendarCollection = require('./Collection');
 var UiSettings = require('../Shared/UiSettingsModel');
 var QueueCollection = require('../Activity/Queue/QueueCollection');
 var Config = require('../Config');
-require('../Mixins/backbone.signalr.mixin');
 require('fullcalendar');
 require('jquery.easypiechart');
 

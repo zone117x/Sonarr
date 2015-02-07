@@ -1,7 +1,9 @@
-var PageableCollection = require('backbone.pageable');
+﻿var PageableCollection = require('backbone.pageable');
 var TaskModel = require('./TaskModel');
+var AsSignalRCollection = require('../../Mixins/AsSignalrCollection');
 
-module.exports = PageableCollection.extend({
+
+var Collection = PageableCollection.extend({
     url   : window.NzbDrone.ApiRoot + '/system/task',
     model : TaskModel,
     state : {
@@ -11,3 +13,7 @@ module.exports = PageableCollection.extend({
     },
     mode  : 'client'
 });
+
+AsSignalRCollection.call(Collection);
+
+module.exports = Collection;

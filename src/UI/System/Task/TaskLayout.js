@@ -6,7 +6,7 @@ var TaskIntervalCell = require('./TaskIntervalCell');
 var ExecuteTaskCell = require('./ExecuteTaskCell');
 var NextExecutionCell = require('./NextExecutionCell');
 var LoadingView = require('../../Shared/LoadingView');
-require('../../Mixins/backbone.signalr.mixin');
+
 
 module.exports = Marionette.Layout.extend({
     template   : 'System/Task/TaskLayoutTemplate',

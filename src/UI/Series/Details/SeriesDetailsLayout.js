@@ -13,7 +13,7 @@ var InfoView = require('./InfoView');
 var CommandController = require('../../Commands/CommandController');
 var LoadingView = require('../../Shared/LoadingView');
 require('backstrech');
-require('../../Mixins/backbone.signalr.mixin');
+
 
 module.exports = Marionette.Layout.extend({
     itemViewContainer  : '.x-series-seasons',

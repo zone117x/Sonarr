@@ -1,22 +1,23 @@
-var _ = require('underscore');
-var Backbone = require('backbone');
+﻿var _ = require('underscore');
 var PageableCollection = require('backbone.pageable');
 var QueueModel = require('./QueueModel');
-require('../../Mixins/backbone.signalr.mixin');
+var AsSignalRCollection = require('../../Mixins/AsSignalrCollection');
 
-module.exports = (function(){
-    var QueueCollection = PageableCollection.extend({
-        url         : window.NzbDrone.ApiRoot + '/queue',
-        model       : QueueModel,
-        state       : {pageSize : 15},
-        mode        : 'client',
-        findEpisode : function(episodeId){
-            return _.find(this.fullCollection.models, function(queueModel){
-                return queueModel.get('episode').id === episodeId;
-            });
-        }
-    });
-    var collection = new QueueCollection().bindSignalR();
-    collection.fetch();
-    return collection;
-}).call(this);
+var QueueCollection = PageableCollection.extend({
+    url         : window.NzbDrone.ApiRoot + '/queue',
+    model       : QueueModel,
+    state       : {pageSize : 15},
+    mode        : 'client',
+    findEpisode : function(episodeId){
+        return _.find(this.fullCollection.models, function(queueModel){
+            return queueModel.get('episode').id === episodeId;
+        });
+    }
+});
+
+AsSignalRCollection.call(QueueCollection);
+var collection = new QueueCollection();
+collection.bindSignalR();
+collection.fetch();
+
+module.exports = collection;

@@ -1,11 +1,10 @@
-var vent = require('../vent');
-var _ = require('underscore');
-var Backbone = require('backbone');
-
+var vent = require('vent');
 require('signalR');
 
-module.exports = _.extend(Backbone.Collection.prototype, {
-    bindSignalR : function(bindOptions){
+
+module.exports = function(){
+
+    this.prototype.bindSignalR = function(bindOptions){
         var collection = this;
         bindOptions = bindOptions || {};
         var processMessage = function(options){
@@ -26,11 +25,14 @@ module.exports = _.extend(Backbone.Collection.prototype, {
                 merge        : true,
                 changeSource : 'signalr'
             });
+
             console.log(options.action + ': {0}}'.format(options.resource));
         };
 
         collection.listenTo(vent, 'server:' + collection.url.split('/api/')[1], processMessage);
 
         return this;
-    }
-});
+    };
+
+    return this;
+};
