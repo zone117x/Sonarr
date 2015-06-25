@@ -13,14 +13,13 @@ namespace NzbDrone.Core.Indexers.TitansOfTv
         {
             var pageableRequests = new List<IEnumerable<IndexerRequest>>();
             var innerList = new List<IndexerRequest>();
-            var httpRequest = BuildHttpRequest(Settings.BaseUrl);
+            var httpRequest = BuildHttpRequest(GetBaseUrl());
 
             innerList.Add(new IndexerRequest(httpRequest));
             pageableRequests.Add(innerList);
 
             return pageableRequests;
         }
-
 
         private HttpRequest BuildHttpRequest(string url)
         {
@@ -32,7 +31,7 @@ namespace NzbDrone.Core.Indexers.TitansOfTv
 
         public IList<IEnumerable<IndexerRequest>> GetSearchRequests(IndexerSearch.Definitions.SingleEpisodeSearchCriteria searchCriteria)
         {
-            var url = Settings.BaseUrl + "?series_id={series}&episode={episode}";
+            var url = GetBaseUrl() + "&series_id={series}&episode={episode}";
             var requests = new List<IEnumerable<IndexerRequest>>();
             var innerList = new List<IndexerRequest>();
             requests.Add(innerList);
@@ -50,7 +49,7 @@ namespace NzbDrone.Core.Indexers.TitansOfTv
 
         public IList<IEnumerable<IndexerRequest>> GetSearchRequests(IndexerSearch.Definitions.SeasonSearchCriteria searchCriteria)
         {
-            var url = Settings.BaseUrl + "?series_id={series}&season={episode}";
+            var url = GetBaseUrl() + "&series_id={series}&season={season}";
             var requests = new List<IEnumerable<IndexerRequest>>();
             var innerList = new List<IndexerRequest>();
             requests.Add(innerList);
@@ -76,7 +75,7 @@ namespace NzbDrone.Core.Indexers.TitansOfTv
 
         public IList<IEnumerable<IndexerRequest>> GetSearchRequests(IndexerSearch.Definitions.DailyEpisodeSearchCriteria searchCriteria)
         {
-            var url = Settings.BaseUrl + "?series_id={series}&air_date={air_date}";
+            var url = GetBaseUrl() + "&series_id={series}&air_date={air_date}";
             var requests = new List<IEnumerable<IndexerRequest>>();
             var innerList = new List<IndexerRequest>();
 
@@ -102,6 +101,11 @@ namespace NzbDrone.Core.Indexers.TitansOfTv
         public IList<IEnumerable<IndexerRequest>> GetSearchRequests(IndexerSearch.Definitions.SpecialEpisodeSearchCriteria searchCriteria)
         {
             return new List<IEnumerable<IndexerRequest>>();
+        }
+
+        private string GetBaseUrl()
+        {
+            return Settings.BaseUrl + "?limit=100";
         }
     }
 }
