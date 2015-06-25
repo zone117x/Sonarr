@@ -67,13 +67,16 @@ var view = Marionette.ItemView.extend({
         }
     },
 
-    _onAuthorizeNotification : function(e) {
-      var self = this;
-      self.ui.indicator.show();
-      this.model.connectData(this.ui.authorizedNotificationButton.data('value')).always(function(newValues) {
-        self.ui.indicator.hide();
-    });
-  }
+    _onAuthorizeNotification : function() {
+        var self = this;
+        var callbackUrl = window.location.origin + '/oauth.html';
+        this.ui.indicator.show();
+        var promise = this.model.connectData(this.ui.authorizedNotificationButton.data('value') + '?callbackUrl=' + callbackUrl);
+
+        promise.always(function() {
+            self.ui.indicator.hide();
+        });
+    }
 });
 
 AsModelBoundView.call(view);

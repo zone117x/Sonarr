@@ -2,21 +2,17 @@
 using FluentValidation.Results;
 using NzbDrone.Common.Extensions;
 using NzbDrone.Core.Tv;
-using System;
-using OAuth;
-using System.Net;
-using System.IO;
 
 namespace NzbDrone.Core.Notifications.Twitter
 {
     class Twitter : NotificationBase<TwitterSettings>
     {
 
-        private readonly ITwitterService _TwitterService;
+        private readonly ITwitterService _twitterService;
 
-        public Twitter(ITwitterService TwitterService)
+        public Twitter(ITwitterService twitterService)
         {
-            _TwitterService = TwitterService;
+            _twitterService = twitterService;
         }
 
         public override string Link
@@ -26,12 +22,12 @@ namespace NzbDrone.Core.Notifications.Twitter
 
         public override void OnGrab(string message)
         {
-            _TwitterService.SendNotification(message, Settings.AccessToken, Settings.AccessTokenSecret, Settings.ConsumerKey, Settings.ConsumerSecret);
+            _twitterService.SendNotification(message, Settings);
         }
 
         public override void OnDownload(DownloadMessage message)
         {
-            _TwitterService.SendNotification(message.Message, Settings.AccessToken, Settings.AccessTokenSecret, Settings.ConsumerKey, Settings.ConsumerSecret);
+            _twitterService.SendNotification(message.Message, Settings);
         }
 
         public override void AfterRename(Series series)
@@ -45,34 +41,34 @@ namespace NzbDrone.Core.Notifications.Twitter
                 return new 
                 {
                     nextStep = "step2",
-                    action = "openwindow",
-                    url = _TwitterService.GetOAuthRedirect(
-                        Settings.ConsumerKey, 
-                        Settings.ConsumerSecret,
-                        "http://localhost:8989/Content/oauthLand.html" /* FIXME - how do I get http host and such */
-                    )
+                    action = "openWindow",
+                    url = _twitterService.GetOAuthRedirect(query["callbackUrl"].ToString())
                 };
             }
             else if (stage == "step2")
             {
                 return new
                 {
-                    action = "updatefields",
-                    fields = _TwitterService.GetOAuthToken(
-                        Settings.ConsumerKey, Settings.ConsumerSecret,
-                        query["oauth_token"].ToString(),
-                        query["oauth_verifier"].ToString()
-                    )
+                    action = "updateFields",
+                    fields = _twitterService.GetOAuthToken(query["oauth_token"].ToString(), query["oauth_verifier"].ToString())
                 };
             }
             return new {};
+        }
+
+        public override string Name
+        {
+            get
+            {
+                return "Twitter";
+            }
         }
 
         public override ValidationResult Test()
         {
             var failures = new List<ValidationFailure>();
 
-            failures.AddIfNotNull(_TwitterService.Test(Settings));
+            failures.AddIfNotNull(_twitterService.Test(Settings));
 
             return new ValidationResult(failures);
         }
