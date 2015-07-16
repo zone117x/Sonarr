@@ -6,6 +6,8 @@
   Licensed under the MIT @license.
 */
 
+// Altered _makeCollectionEventHandler function on lines 499-508
+
 (function (factory) {
 
   // CommonJS
@@ -494,8 +496,15 @@
               state.totalRecords = null;
               state.totalPages = null;
             }
+            // Stay on the same page when resetting the collection
             if (pageCol.mode == "client") {
-              state.lastPage = state.currentPage = state.firstPage;
+              var totalPages = state.totalPages = ceil(state.totalRecords / pageSize);
+
+              if (state.currentPage > totalPages) {
+                state.currentPage = 1;
+                pageStart = 0;
+                pageEnd = pageSize;
+              }
             }
             pageCol.state = pageCol._checkState(state);
             pageCol.reset(fullCol.models.slice(pageStart, pageEnd),
