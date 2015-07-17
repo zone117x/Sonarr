@@ -26,6 +26,10 @@ var SonarrPageableCollection = PageableCollection.extend({
                     _.extend({}, options, {parse: false}));
             } else if (currentPage !== this.state.currentPage) {
                 this.state.currentPage = currentPage;
+
+                // If backbone pageable fixes their reset bug
+                // (they reset the page number, but not the range),
+                // we'll need to do this
 //                this.pageCollection.reset(this.fullCollection.models.slice(pageStart, pageEnd),
 //                    _.extend({}, options, {parse: false}));
             }
