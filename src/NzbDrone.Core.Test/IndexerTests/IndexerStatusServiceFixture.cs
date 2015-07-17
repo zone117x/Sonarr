@@ -39,7 +39,7 @@ namespace NzbDrone.Core.Test.IndexerTests
         {
             WithStatus(new IndexerStatus());
 
-            Subject.ReportFailure(1);
+            Subject.RecordFailure(1);
 
             VerifyUpdate();
 
@@ -53,7 +53,7 @@ namespace NzbDrone.Core.Test.IndexerTests
         {
             WithStatus(new IndexerStatus { EscalationLevel = 2 });
 
-            Subject.ReportSuccess(1);
+            Subject.RecordSuccess(1);
 
             VerifyUpdate();
 
@@ -66,7 +66,7 @@ namespace NzbDrone.Core.Test.IndexerTests
         {
             WithStatus(new IndexerStatus { EscalationLevel = 0 });
 
-            Subject.ReportSuccess(1);
+            Subject.RecordSuccess(1);
 
             VerifyUpdate(false);
         }
@@ -76,9 +76,9 @@ namespace NzbDrone.Core.Test.IndexerTests
         {
             WithStatus(new IndexerStatus { MostRecentFailure = _epoch - TimeSpan.FromSeconds(4), EscalationLevel = 3 });
 
-            Subject.ReportSuccess(1);
-            Subject.ReportSuccess(1);
-            Subject.ReportFailure(1);
+            Subject.RecordSuccess(1);
+            Subject.RecordSuccess(1);
+            Subject.RecordFailure(1);
 
             var status = Subject.GetIndexerStatus(1);
             status.DisabledTill.Should().HaveValue();

@@ -124,7 +124,7 @@ namespace NzbDrone.Core.Test.Download
             Assert.Throws<ReleaseDownloadException>(() => Subject.DownloadReport(_parseResult));
 
             Mocker.GetMock<IIndexerStatusService>()
-                .Verify(v => v.ReportFailure(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Once());
+                .Verify(v => v.RecordFailure(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Once());
         }
 
         [Test]
@@ -143,7 +143,7 @@ namespace NzbDrone.Core.Test.Download
             Assert.Throws<ReleaseDownloadException>(() => Subject.DownloadReport(_parseResult));
 
             Mocker.GetMock<IIndexerStatusService>()
-                .Verify(v => v.ReportFailure(It.IsAny<int>(), TimeSpan.FromMinutes(5)), Times.Once());
+                .Verify(v => v.RecordFailure(It.IsAny<int>(), TimeSpan.FromMinutes(5)), Times.Once());
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace NzbDrone.Core.Test.Download
             Assert.Throws<DownloadClientException>(() => Subject.DownloadReport(_parseResult));
 
             Mocker.GetMock<IIndexerStatusService>()
-                .Verify(v => v.ReportFailure(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never());
+                .Verify(v => v.RecordFailure(It.IsAny<int>(), It.IsAny<TimeSpan>()), Times.Never());
         }
 
         [Test]

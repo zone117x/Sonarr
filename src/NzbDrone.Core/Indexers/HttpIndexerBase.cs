@@ -150,15 +150,15 @@ namespace NzbDrone.Core.Indexers
                                 fullyUpdated = true;
                                 break;
                             }
-                            var oldestDate = page.Select(v => v.PublishDate).Min();
-                            if (oldestDate < lastReleaseInfo.PublishDate || page.Any(v => v.DownloadUrl == lastReleaseInfo.DownloadUrl))
+                            var oldestReleaseDate = page.Select(v => v.PublishDate).Min();
+                            if (oldestReleaseDate < lastReleaseInfo.PublishDate || page.Any(v => v.DownloadUrl == lastReleaseInfo.DownloadUrl))
                             {
                                 fullyUpdated = true;
                                 break;
                             }
 
                             if (pagedReleases.Count >= MaxNumResultsPerQuery &&
-                                oldestDate < DateTime.UtcNow - TimeSpan.FromHours(24))
+                                oldestReleaseDate < DateTime.UtcNow - TimeSpan.FromHours(24))
                             {
                                 fullyUpdated = false;
                                 break;
@@ -192,11 +192,11 @@ namespace NzbDrone.Core.Indexers
                     _indexerStatusService.UpdateRssSyncStatus(Definition.Id, lastReleaseInfo);
                 }
 
-                _indexerStatusService.ReportSuccess(Definition.Id);
+                _indexerStatusService.RecordSuccess(Definition.Id);
             }
             catch (WebException webException)
             {
-                _indexerStatusService.ReportFailure(Definition.Id);
+                _indexerStatusService.RecordFailure(Definition.Id);
                 if (webException.Message.Contains("502") || webException.Message.Contains("503") ||
                     webException.Message.Contains("timed out"))
                 {
@@ -211,34 +211,34 @@ namespace NzbDrone.Core.Indexers
             {
                 if ((int)httpException.Response.StatusCode == 429)
                 {
-                    _indexerStatusService.ReportFailure(Definition.Id, TimeSpan.FromHours(1));
+                    _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
                     _logger.Warn("API Request Limit reached for {0}", this);
                 }
                 else
                 {
-                    _indexerStatusService.ReportFailure(Definition.Id);
+                    _indexerStatusService.RecordFailure(Definition.Id);
                     _logger.Warn("{0} {1}", this, httpException.Message);
                 }
             }
             catch (RequestLimitReachedException)
             {
-                _indexerStatusService.ReportFailure(Definition.Id, TimeSpan.FromHours(1));
+                _indexerStatusService.RecordFailure(Definition.Id, TimeSpan.FromHours(1));
                 _logger.Warn("API Request Limit reached for {0}", this);
             }
             catch (ApiKeyException)
             {
-                _indexerStatusService.ReportFailure(Definition.Id);
+                _indexerStatusService.RecordFailure(Definition.Id);
                 _logger.Warn("Invalid API Key for {0} {1}", this, url);
             }
             catch (IndexerException ex)
             {
-                _indexerStatusService.ReportFailure(Definition.Id);
+                _indexerStatusService.RecordFailure(Definition.Id);
                 var message = String.Format("{0} - {1}", ex.Message, url);
                 _logger.WarnException(message, ex);
             }
             catch (Exception feedEx)
             {
-                _indexerStatusService.ReportFailure(Definition.Id);
+                _indexerStatusService.RecordFailure(Definition.Id);
                 feedEx.Data.Add("FeedUrl", url);
                 _logger.ErrorException("An error occurred while processing feed. " + url, feedEx);
             }

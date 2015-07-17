@@ -68,12 +68,14 @@ namespace NzbDrone.Core.Indexers
 
         private IEnumerable<IIndexer> FilterBlockedIndexers(IEnumerable<IIndexer> indexers)
         {
+            var blockedIndexers = _indexerStatusService.GetBlockedIndexers().ToDictionary(v => v.IndexerId, v => v);
+
             foreach (var indexer in indexers)
             {
-                var indexerStatus = _indexerStatusService.GetIndexerStatus(indexer.Definition.Id);
-                if (indexerStatus != null && indexerStatus.IsDisabled())
+                IndexerStatus blockedIndexerStatus;
+                if (blockedIndexers.TryGetValue(indexer.Definition.Id, out blockedIndexerStatus))
                 {
-                    _logger.Debug("Temporarily ignoring indexer {0} till {1} due to recent failures.", indexer.Definition.Name, indexerStatus.DisabledTill.Value);
+                    _logger.Debug("Temporarily ignoring indexer {0} till {1} due to recent failures.", indexer.Definition.Name, blockedIndexerStatus.DisabledTill.Value);
                     continue;
                 }
 

@@ -4,11 +4,11 @@ namespace NzbDrone.Core.ThingiProvider.Events
 {
     public class ProviderUpdatedEvent<TProvider> : IEvent
     {
-        public int ProviderId { get; private set; }
+        public ProviderDefinition Definition { get; private set; }
 
-        public ProviderUpdatedEvent(int id)
+        public ProviderUpdatedEvent(ProviderDefinition definition)
         {
-            ProviderId = id;
+            Definition = definition;
         }
     }
 }

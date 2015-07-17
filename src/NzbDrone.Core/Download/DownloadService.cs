@@ -64,18 +64,18 @@ namespace NzbDrone.Core.Download
             try
             {
                 downloadClientId = downloadClient.Download(remoteEpisode);
-                _indexerStatusService.ReportSuccess(remoteEpisode.Release.IndexerId);
+                _indexerStatusService.RecordSuccess(remoteEpisode.Release.IndexerId);
             }
             catch (ReleaseDownloadException ex)
             {
                 var http429 = ex.InnerException as TooManyRequestsException;
                 if (http429 != null)
                 {
-                    _indexerStatusService.ReportFailure(remoteEpisode.Release.IndexerId, http429.RetryAfter);
+                    _indexerStatusService.RecordFailure(remoteEpisode.Release.IndexerId, http429.RetryAfter);
                 }
                 else
                 {
-                    _indexerStatusService.ReportFailure(remoteEpisode.Release.IndexerId);
+                    _indexerStatusService.RecordFailure(remoteEpisode.Release.IndexerId);
                 }
                 throw;
             }

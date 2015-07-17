@@ -69,8 +69,6 @@ namespace NzbDrone.Core.Indexers
 
         public void Execute(RssSyncCommand message)
         {
-            var rssStarted = DateTime.UtcNow;
-
             var processed = Sync();
             var grabbedOrPending = processed.Grabbed.Concat(processed.Pending).ToList();
 

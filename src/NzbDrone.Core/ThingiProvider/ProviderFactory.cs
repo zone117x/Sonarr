@@ -99,7 +99,7 @@ namespace NzbDrone.Core.ThingiProvider
         public virtual void Update(TProviderDefinition definition)
         {
             _providerRepository.Update(definition);
-            _eventAggregator.PublishEvent(new ProviderUpdatedEvent<TProvider>(definition.Id));
+            _eventAggregator.PublishEvent(new ProviderUpdatedEvent<TProvider>(definition));
         }
 
         public void Delete(int id)

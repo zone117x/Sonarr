@@ -13,8 +13,8 @@ namespace NzbDrone.Core.Indexers
     {
         List<IndexerStatus> GetBlockedIndexers();
         IndexerStatus GetIndexerStatus(int indexerId);
-        void ReportSuccess(int indexerId);
-        void ReportFailure(int indexerId, TimeSpan minimumBackOff = default(TimeSpan));
+        void RecordSuccess(int indexerId);
+        void RecordFailure(int indexerId, TimeSpan minimumBackOff = default(TimeSpan));
 
         void UpdateRssSyncStatus(int indexerId, ReleaseInfo releaseInfo);
     }
@@ -52,7 +52,7 @@ namespace NzbDrone.Core.Indexers
 
         public IndexerStatus GetIndexerStatus(int indexerId)
         {
-            return _indexerStatusRepository.FindByIndexerId(indexerId) ?? new IndexerStatus { IndexerId = indexerId };
+            return _indexerStatusRepository.FindByIndexerId(indexerId);
         }
 
         private TimeSpan CalculateBackOffPeriod(IndexerStatus status)
@@ -62,11 +62,11 @@ namespace NzbDrone.Core.Indexers
             return TimeSpan.FromSeconds(EscalationBackOffPeriods[level]);
         }
 
-        public void ReportSuccess(int indexerId)
+        public void RecordSuccess(int indexerId)
         {
             lock (_syncRoot)
             {
-                var status = GetIndexerStatus(indexerId);
+                var status = FetchIndexerStatus(indexerId);
 
                 if (status.EscalationLevel == 0)
                 {
@@ -80,11 +80,11 @@ namespace NzbDrone.Core.Indexers
             }
         }
 
-        public void ReportFailure(int indexerId, TimeSpan minimumBackOff = default(TimeSpan))
+        public void RecordFailure(int indexerId, TimeSpan minimumBackOff = default(TimeSpan))
         {
             lock (_syncRoot)
             {
-                var status = GetIndexerStatus(indexerId);
+                var status = FetchIndexerStatus(indexerId);
 
                 var now = DateTime.UtcNow;
 
@@ -114,12 +114,24 @@ namespace NzbDrone.Core.Indexers
         {
             lock (_syncRoot)
             {
-                var status = GetIndexerStatus(indexerId);
+                var status = FetchIndexerStatus(indexerId);
 
                 status.LastRssSyncReleaseInfo = releaseInfo;
 
                 _indexerStatusRepository.Upsert(status);
             }
+        }
+
+        private IndexerStatus FetchIndexerStatus(int indexerId)
+        {
+            var indexerStatus = _indexerStatusRepository.FindByIndexerId(indexerId);
+
+            if (indexerStatus == null)
+            {
+                indexerStatus = new IndexerStatus { IndexerId = indexerId };
+            }
+
+            return indexerStatus;
         }
 
         public void HandleAsync(ProviderDeletedEvent<IIndexer> message)
